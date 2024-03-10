@@ -1,39 +1,69 @@
-const getComputerChoice = () => {
-    const choice = ["rock", "paper", "scissors"];
-
-    return choice[Math.floor(Math.random() * 3)];
-};
+const rock = document.querySelector("#rock");
+const paper = document.querySelector("#paper");
+const scissors = document.querySelector("#scissors");
+const playerScoreDisplay = document.querySelector("#playerScore");
+const computerScoreDisplay = document.querySelector("#computerScore");
 
 let playerScore = 0;
 let computerScore = 0;
+const winningScore = 5;
+let isWinner = false;
 
-const singleRoundOfGame = (playerSelection, computerSelection) => {
+rock.addEventListener("click", () => {
+    singleRoundOfGame("rock", getComputerChoice());
+});
+
+paper.addEventListener("click", () => {
+    singleRoundOfGame("paper", getComputerChoice());
+});
+
+scissors.addEventListener("click", () => {
+    singleRoundOfGame("scissors", getComputerChoice());
+});
+
+const whoWon = (someone) => {
+    isWinner = true;
+    const winner = document.querySelector(`#${someone}Winner`);
+    winner.textContent = `${someone} has won!`;
+};
+
+const winnerCheck = (check, winner) => {
+    if (check === winningScore) {
+        isWinner = true;
+        whoWon(winner);
+    }
+};
+
+const getWinner = (playerSelection, computerSelection) => {
     playerSelection = playerSelection.toLowerCase();
+
+    if (playerSelection === computerSelection) {
+        return `It's a draw! Both chose ${playerSelection || computerSelection}!`;
+    }
 
     if (
         (playerSelection === "rock" && computerSelection === "scissors") ||
         (playerSelection === "paper" && computerSelection === "rock") ||
         (playerSelection === "scissors" && computerSelection === "paper")
     ) {
-        playerScore++;
-        return `Player wins! ${playerSelection} beats ${computerSelection}`;
+        playerScoreDisplay.textContent = ++playerScore;
+        winnerCheck(playerScore, "player");
     } else {
-        computerScore++;
-        return `Computer wins! ${computerSelection} beats ${playerSelection}`;
+        computerScoreDisplay.textContent = ++computerScore;
+        winnerCheck(computerScore, "computer");
     }
 };
 
-const playGame = () => {
-    for (let i = 0; i < 5; i++) {
-        playerChoice = window.prompt("Rock, paper or scissors?");
-        console.log(singleRoundOfGame(playerChoice, getComputerChoice()));
-    }
-
-    if (playerScore > computerScore) {
-        console.log("Player wins!");
+const singleRoundOfGame = (playerSelection, computerSelection) => {
+    if (!isWinner) {
+        getWinner(playerSelection, computerSelection);
     } else {
-        console.log("Computer wins!");
+        return "Someone has won!";
     }
 };
 
-playGame();
+const getComputerChoice = () => {
+    const choice = ["rock", "paper", "scissors"];
+
+    return choice[Math.floor(Math.random() * 3)];
+};
